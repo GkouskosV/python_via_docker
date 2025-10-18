@@ -1,0 +1,46 @@
+name: base_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+# Core Python version
+  - python=3.11
+
+# Data Science essentials
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+
+# Deep Learning
+  - tensorflow
+  - xgboost
+  - lightgbm
+  - catboost
+
+# Jupyter
+  - jupyterlab
+  - ipykernel
+
+# Utilities
+  - openpyxl
+  - pyyaml
+  - requests
+
+# Web Frameworks (basic)
+  - flask
+  - fastapi
+  - uvicorn
+
+# Install pip packages after conda ones
+  - pip
+  - pip:
+      - plotly
+      - dash
+      - jupyterlab-code-formatter
+      - black
+      - isort
+      - flake8
+      - pytest
