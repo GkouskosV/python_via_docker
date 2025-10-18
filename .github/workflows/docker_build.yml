@@ -1,0 +1,63 @@
+name: Build & Test Python ML Image
+on:
+  push:
+    branches: [ "dev", "main" ] # build & test on every push to dev
+  pull_request:
+    branches: [ "main" ] # PRs into main get extra tests
+  workflow_dispatch:
+
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build the image and load it into the local docker daemon so we can run in
+      - name: Build image (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          tags: local/python-ml:test
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Full smoke test on dev: make sure core libs import
+      - name: Smoke test (dev & PR)
+        if: github.ref == 'refs/heads/dev' || github.event_name == 'pull_request'
+        run: |
+          docker run --rm local/python-ml:test python - <<'PY'
+          import numpy, pandas, sklearn, jupyterlab, ipykernel
+          import flask, fastapi, uvicorn
+          import numpy as np
+          A = np.arange(9).reshape(3,3); assert int(A.sum()) == 36
+          print)"✅ full smoke OK")
+          PY
+
+      # Minimal sanity on main after merge
+      - name: Minimal sanity test (main only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          docker run --rm local/python-ml: test python -c "import numpy, pandas; print('✅ minimal OK')"
+
+  push-image:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action#v3
+        with:
+          context: .
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/python-ml:latest
+            ghcr.io/${{ github.repository_owner }}/python -ml:${{ github.sha }}

@@ -1,2 +1,20 @@
-# Web development
+# Web Development
 Flask==3.0.3
+FastAPI==0.115.0
+uvicorn[standard]==0.32.0
+
+# Data Processing
+SQLAlchemy==2.0.35
+pydantic==2.9.2
+beautifulsoup4==4.12.3
+
+# Visualization and notebooks
+plotly==5.24.1
+dash==2.18.2
+
+# Dev tools
+black==24.10.0
+flake8==7.1.1
+pytest==8.3.3
+isort==5.13.2
+jupyterlab-code-formatter==2.2.1

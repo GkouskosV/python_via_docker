@@ -2,45 +2,47 @@ name: base_env
 channels:
   - conda-forge
   - defaults
+# strict channel priority gives deterministic solves on conda-forge
+# (optional, but recommended) -> we'll also set it in Dockerfile
 dependencies:
 # Core Python version
-  - python=3.11
+  - python=3.11.9
 
 # Data Science essentials
-  - numpy
-  - pandas
-  - scipy
-  - scikit-learn
-  - matplotlib
-  - seaborn
+  - numpy=2.1.2
+  - pandas=2.2.3
+  - scipy=1.13.1
+  - scikit-learn=1.5.2
+  - matplotlib=3.9.2
+  - seaborn=0.13.2
 
 # Deep Learning
-  - tensorflow
-  - xgboost
-  - lightgbm
-  - catboost
+  - tensorflow=2.17.0
+  - xgboost=2.1.1
+  - lightgbm=4.5.0
+  - catboost=1.2.5
 
 # Jupyter
-  - jupyterlab
-  - ipykernel
+  - jupyterlab=4.2.5
+  - ipykernel=6.29.5
 
 # Utilities
-  - openpyxl
-  - pyyaml
-  - requests
+  - openpyxl=3.1.5
+  - pyyaml=6.0.2
+  - requests=2.32.3
 
 # Web Frameworks (basic)
-  - flask
-  - fastapi
-  - uvicorn
+  - flask=3.0.3
+  - fastapi=0.115.0
+  - uvicorn=0.32.0
 
 # Install pip packages after conda ones
   - pip
   - pip:
-      - plotly
-      - dash
-      - jupyterlab-code-formatter
-      - black
-      - isort
-      - flake8
-      - pytest
+      - plotly==5.24.1
+      - dash==2.18.2
+      - jupyterlab-code-formatter==2.2.1
+      - black==24.10.0
+      - isort==5.13.2
+      - flake8==7.1.1
+      - pytest==8.3.3
